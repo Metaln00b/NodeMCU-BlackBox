@@ -1,0 +1,189 @@
+<div class="container animated" ng-class="{'fadeInLeft': loading_animation}">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>
+            Information
+            <div class="btn-group pull-right">
+                <button data-placement="bottom" title="Save" tooltip type="button" class="btn btn-success" ng-click="saveClicked()">
+                    Save
+                </button>
+                <button data-toggle="modal" data-placement="bottom" title="Show info" tooltip type="button" class="btn btn-default" data-target="#myModal" ng-click="updateModal(d)">
+                    Info
+                </button>
+            </div>
+        </h1>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Information</h3>
+          </div>
+          <div class="modal-body">
+              <h4>General Information</h4>
+              <p><strong>ID:</strong> {{ardata.id}}</p>
+              <p><strong>BYTE:</strong> {{ardata.byte_n}}</p>
+              <p><strong>INPUTMIN:</strong> {{ardata.inputmin}}</p>
+              <p><strong>INPUTMAX:</strong> {{ardata.inputmax}}</p>
+              <p><strong>OUTPUTMIN:</strong> {{ardata.outputmin}}</p>
+              <p><strong>OUTPUTMAX:</strong> {{ardata.outputmax}}</p>
+              <p><strong>UNIT:</strong> {{ardata.unit}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center-block" style="width: 60%">
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igid" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>ID</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="id"
+                            placeholder="Enter id"
+                            ng-model="ardata.id"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igbyte_n" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Byte</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="byte_n"
+                            placeholder="Enter byte"
+                            ng-model="ardata.byte_n"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="iginput" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Input</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="inputmin"
+                            placeholder="Enter input min"
+                            ng-model="ardata.inputmin"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="inputmax"
+                            placeholder="Enter input max"
+                            ng-model="ardata.inputmax"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igoutput" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Output</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="outputmin"
+                            placeholder="Enter output min"
+                            ng-model="ardata.outputmin"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="outputmax"
+                            placeholder="Enter output max"
+                            ng-model="ardata.outputmax"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igunit" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Unit</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="unit"
+                            placeholder="Enter unit"
+                            ng-model="ardata.unit"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="text-muted text-justify" style="margin-top: 2em">
+            <em>Lorem ipsum</em> dolor sit amet, consetetur sadipscing elitr,
+            sed diam nonumy eirmod tempor invidunt ut labore et dolore
+            magna aliquyam erat, sed diam voluptua. At vero eos et
+            accusam et justo duo dolores et ea rebum. Stet clita
+            kasd gubergren, no sea takimata sanctus est Lorem ipsum
+            dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+            sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+            ut labore et dolore magna aliquyam erat, sed diam voluptua.
+            At vero eos et accusam et justo duo dolores et ea rebum.
+            Stet clita kasd gubergren, no sea takimata sanctus est
+            Lorem ipsum dolor sit amet.
+        </div>
+    </div>
+
+    <reload-info>
+        {{ardata.last_update}}
+    </reload-info>
+
+</div>

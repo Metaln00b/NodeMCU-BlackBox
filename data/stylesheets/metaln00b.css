@@ -1,0 +1,127 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    font-size: 28px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 > small {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.popover{
+    max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}
+
+.page-header {
+    margin-top: 0px;
+}
+
+.nav a {
+    font-family : "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.navbar-brand {
+    font-family : "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.navbar {
+    -webkit-box-shadow: 0px 1px 6px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 1px 6px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 1px 6px 0px rgba(0,0,0,0.5);
+}
+
+.page-header {
+    border-color: #ccc;
+}
+
+.btn {
+    font-family : "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.abstand-rechts {
+    margin-right: 0.5em;
+}
+
+.big-icon {
+    font-size: 25.0em;
+}
+
+.progress {
+    width: 40em;
+}
+
+.normbox {
+    padding: 5px;
+    margin-bottom: 2em;
+    background: #fff;
+    border-style: solid;
+    border-width: thin;
+    border-color: #ccc;
+    border-radius: 6px;
+}
+
+.normbox-success {
+    border-color: #d6e9c6;
+    background: #dff0d8 !important;
+}
+
+.normbox-info {
+    border-color: #bce8f1;
+    background: #d9edf7 !important;
+}
+
+.normbox-warning {
+    border-color: #faebcc;
+    background: #fcf8e3 !important;
+}
+
+.normbox-danger {
+    border-color: #ebccd1;
+    background: #f2dede !important;
+}
+
+.cstbox {
+    padding: 40px;
+    font-size: 2.0em;
+    text-align: center;
+    background: #fff;
+    border-style: none;
+    border-width: thin;
+    border-color: #ccc;
+    border-radius: 6px;
+}
+
+.cstbox_auto {
+    background: #dff0d8 !important;
+}
+
+.cstbox_skip {
+    background: #fcf8e3 !important;
+}
+
+.cstbox_na {
+    background: #e0e0e0 !important;
+}
+
+.nrmlzbox{
+    padding: 10px;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    background: #fff;
+    border-style: solid;
+    border-width: thin;
+    border-color: #ccc;
+    border-radius: 6px;
+    width: 10em;
+}

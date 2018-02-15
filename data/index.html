@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de" ng-app="app" ng-controller="appCtrl">
+<head>
+    <!--<title ng-bind="page.getTitle()"></title>-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAABwAAABAAAAAQAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAzGWaAVb/7YFZf/XBmf/1wZg/7YENZtoAAAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAACxAAAVzAUAFHtDAE3/0ABT//8AP///ADr//wA7//8AQv//AFn//wBT/80ADmY9AAmtAwAAAAAAAAAAAADMAAAe/wUAGaBDAFH/4QBd//8Aev//Bq///wvT//8L0P//BKj//wB0//8AX///AFX/3gARhzoAFP4DAAAAAAAH9QIAKegeAEP/sQB1//8Fof//D+D//xT///8Y////GP///xT///8O3P//BJv//wB1//8AQ/+rACDWFgAA7AEAG/8GABSQOAJm/+sHlf//C8T//xD0//8V////Gv///xr///8V////EPP//wvC//8Hk///Amf/6gANfDIAEv8DABD/BgIWZ0kRgv/+Cp///wvF//8P7///FP///xj///8Y////E////w/v//8Lxf//Cp7//xGC//4DFWFHAAb/AwAA6wE2RodMNJv//w+e//8Kuv//DNz//w/7//8S////Ev///w/7//8M3P//Cbn//w+e//80m///NkaITAAA4QEAAAAAYllHNWi7//soo///Caj//wvB//8U3P//F+v//xfr//8U3P//C8H//wmo//8oo///aLv/+2JZSTUAAAAAAAAAAHtsSRWOx//Vf9L//zSv//9L0P//TN3//0zk//9M5P//TN3//0vQ//80r///ftL//47H/9Z6bEoVAAAAAAAAAAComnkCiKP1csf///3k////sv///5b1//+P9P//j/T//5b1//+y////5P///8f///2Io/ZyqJp7AgAAAAAAAAAAAAAAAI2AYBCdw/+m/////v////////////////////////////////////6dw/+mjoFiEQAAAAAAAAAAAAAAAAAAAADz58kAkINlFZ68/4v////u/////////////////////////++fvP+LkINmFfTnywAAAAAAAAAAAAAAAAAAAAAAAAAAAOzgxACnmn4GjoVzLZOu/3Kszv+ZrM//mZOv/3KPhnQtp5uABvXpzgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//7QDo3MIBxLidA8S4nQPq3sMB///uAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAPgfAADgBwAAgAMAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAEAAIABAACAAQAAwAMAAMADAADgBwAA+B8AAA==" rel="icon" type="image/x-icon">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="animate.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet/less" type="text/css" href="style.less" />
+    <link rel="stylesheet" href="stylesheets/metaln00b.css">
+
+    <!-- Scripts -->
+    <script src="less.min.js" type="text/javascript"></script>
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="angular.min.js"></script>
+    <script src="angular-route.min.js"></script>
+    <script src="angular-sanitize.min.js"></script>
+    <script src="angular-md5.js"></script>
+    <script src="app.js"></script>
+    <script src="information.js"></script>
+    <script src="controllers/home.js"></script>
+    <script src="services/page.js"></script>
+    <script src="services/data_auto_reload.js"></script>
+    <script src="directives/scroll.js"></script>
+    <script src="directives/tooltip.js"></script>
+    <script src="directives/popover.js"></script>
+    <script src="directives/reload_info.js"></script>
+</head>
+
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-default navbar-static-top" ng-controller="navBarCtrl">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/"><img class="pull-left abstand-rechts" src="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAABwAAABAAAAAQAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAzGWaAVb/7YFZf/XBmf/1wZg/7YENZtoAAAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAACxAAAVzAUAFHtDAE3/0ABT//8AP///ADr//wA7//8AQv//AFn//wBT/80ADmY9AAmtAwAAAAAAAAAAAADMAAAe/wUAGaBDAFH/4QBd//8Aev//Bq///wvT//8L0P//BKj//wB0//8AX///AFX/3gARhzoAFP4DAAAAAAAH9QIAKegeAEP/sQB1//8Fof//D+D//xT///8Y////GP///xT///8O3P//BJv//wB1//8AQ/+rACDWFgAA7AEAG/8GABSQOAJm/+sHlf//C8T//xD0//8V////Gv///xr///8V////EPP//wvC//8Hk///Amf/6gANfDIAEv8DABD/BgIWZ0kRgv/+Cp///wvF//8P7///FP///xj///8Y////E////w/v//8Lxf//Cp7//xGC//4DFWFHAAb/AwAA6wE2RodMNJv//w+e//8Kuv//DNz//w/7//8S////Ev///w/7//8M3P//Cbn//w+e//80m///NkaITAAA4QEAAAAAYllHNWi7//soo///Caj//wvB//8U3P//F+v//xfr//8U3P//C8H//wmo//8oo///aLv/+2JZSTUAAAAAAAAAAHtsSRWOx//Vf9L//zSv//9L0P//TN3//0zk//9M5P//TN3//0vQ//80r///ftL//47H/9Z6bEoVAAAAAAAAAAComnkCiKP1csf///3k////sv///5b1//+P9P//j/T//5b1//+y////5P///8f///2Io/ZyqJp7AgAAAAAAAAAAAAAAAI2AYBCdw/+m/////v////////////////////////////////////6dw/+mjoFiEQAAAAAAAAAAAAAAAAAAAADz58kAkINlFZ68/4v////u/////////////////////////++fvP+LkINmFfTnywAAAAAAAAAAAAAAAAAAAAAAAAAAAOzgxACnmn4GjoVzLZOu/3Kszv+ZrM//mZOv/3KPhnQtp5uABvXpzgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//7QDo3MIBxLidA8S4nQPq3sMB///uAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAPgfAADgBwAAgAMAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAEAAIABAACAAQAAwAMAAMADAADgBwAA+B8AAA==" rel="icon" type="image/x-icon"" width="24em" height="24em"> Startseite</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="dropdown" data-ng-class="{active: route.current.activeTab === 'diagnostic'}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><i class=""></i> Diagnose<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/diagnostic/info"><i class=""></i> Information</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Pagelet Viewport -->
+<div ng-view></div>
+
+</body>

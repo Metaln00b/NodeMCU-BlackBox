@@ -10,8 +10,26 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <FS.h>
+#include <ArduinoJson.h>
 
-#define version 3.4
+#define ssid      "BlackBox"      // WiFi SSID
+#define password  "12345678"  // WiFi password
+
+ESP8266WebServer server ( 80 );
+
+StaticJsonBuffer<2048> jsonBuffer;
+JsonObject& root = jsonBuffer.createObject();
+JsonArray& wi_id = root.createNestedArray("id");
+JsonArray& wi_byte_n = root.createNestedArray("byte_n");
+JsonArray& wi_inputmin = root.createNestedArray("inputmin");
+JsonArray& wi_inputmax = root.createNestedArray("inputmax");
+JsonArray& wi_outputmin = root.createNestedArray("outputmin");
+JsonArray& wi_outputmax = root.createNestedArray("outputmax");
+JsonArray& wi_unit = root.createNestedArray("unit");
+//char json[2048];
+
+#define version 4.0
 #define CAN0_INT 2 // Set INT to pin 2
 MCP_CAN CAN0(0); // Set CS to pin 10
 
@@ -30,44 +48,77 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); // Set the LCD I2
 long unsigned int rxId;
 uint8_t rxBuf[8];
 
-String html1 = "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n<meta content=\"text/html; charset=ISO-8859-1\" http-equiv=\"content-type\">\r\n<title>WebSchalter</title>\r\n";
+void saveSettings() {
+    String wi_id = server.arg("id");
+    root["id"] = wi_id;
 
-String html2 = "</head>\r\n<body>\r\n</body>\r\n</html>";
- 
-ESP8266WebServer server(80);    // Server Port  hier einstellen
-String Temp = "";
- 
-void Ereignis_Index()           // Wird ausgeuehrt wenn "http://<ip address>/" aufgerufen wurde
-{
-  Temp = html1 + String((rxId)) + String((rxBuf[0])) + String((rxBuf[1])) + String((rxBuf[2])) + String((rxBuf[3])) + String((rxBuf[4])) + String((rxBuf[5])) + String((rxBuf[6])) + String((rxBuf[7])) + html2;
-  server.send(200, "text/html", Temp);
+    String wi_byte_n = server.arg("byte_n");
+    root["byte_n"] = wi_byte_n;
+
+    String wi_inputmin = server.arg("inputmin");
+    root["inputmin"] = wi_inputmin;
+
+    String wi_inputmax = server.arg("inputmax");
+    root["inputmax"] = wi_inputmax;
+
+    String wi_outputmin = server.arg("outputmin");
+    root["outputmin"] = wi_outputmin;
+
+    String wi_outputmax = server.arg("outputmax");
+    root["outputmax"] = wi_outputmax;
+
+    String wi_unit = server.arg("unit");
+    root["unit"] = wi_unit;
+
+    File infoFile = SPIFFS.open("/info.json", "w");
+    root.printTo(infoFile);
+    infoFile.close();
+
+    Serial.print("ID: "+wi_id+"\n");
+    Serial.print("Byte: "+wi_byte_n+"\n");
+    Serial.print("Inputmin: "+wi_inputmin+"\n");
+    Serial.print("Inputmax: "+wi_inputmax+"\n");
+    Serial.print("Outputmin: "+wi_outputmin+"\n");
+    Serial.print("Outputmax: "+wi_outputmax+"\n");
+    Serial.print("Unit: "+wi_unit+"\n");
+    server.send(200, "text/json", "true");
 }
 
 void web_interface_setup()
 {
- 
-  Serial.begin(115200);         // Serielle schnittstelle initialisieren
-  Serial.println("");           // Lehere Zeile ausgeben
-  Serial.println("Starte WLAN-Hotspot \"BlackBox\"");
-  WiFi.mode(WIFI_AP);           // access point modus
-  WiFi.softAP("BlackBox", "12345678");    // Name des Wi-Fi netzes
-  delay(500);                   //Abwarten 0,5s
-  Serial.print("IP Adresse ");  //Ausgabe aktueller IP des Servers
-  Serial.println(WiFi.softAPIP());
- 
-  //  Behandlung der Ereignissen anschliessen
-  server.on("/", Ereignis_Index);
- 
-  server.begin();               // Starte den Server
-  Serial.println("HTTP Server gestartet");
+    Serial.println("");
+    Serial.print("Starte WLAN-Hotspot: ");
+    Serial.println(ssid);
+    Serial.print("Passwort: ");
+    Serial.println(password);
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP(ssid, password);
+    delay(500);
+    Serial.println("");
+    Serial.print("IP Adresse: ");
+    Serial.println(WiFi.softAPIP());
+
+    if (!SPIFFS.begin())
+    {
+        // Serious problem
+        Serial.println("SPIFFS Mount failed");
+    } else {
+        Serial.println("SPIFFS Mount succesfull");
+    }
+
+    server.on("/setinfo.json", saveSettings);
+
+    server.serveStatic("/", SPIFFS, "/index.html");
+    server.serveStatic("/", SPIFFS, "/");
+
+    server.begin();
+    Serial.println("HTTP Server gestartet");
 }
- 
+
 void web_interface_loop()
 {
-  server.handleClient();
+    server.handleClient();
 }
-
-
 
 const char custom[][8] PROGMEM = {                      // Custom character definitions
     { 0x1F, 0x1F, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00 }, // char 1 
@@ -399,7 +450,7 @@ pkg_routine_t pkg_routines[] = {
  ******************************************************************************/
 
 void setup() {
-    Serial.begin(9600); // Used to type in characters
+    Serial.begin(115200); // Used to type in characters
 
     lcd.begin(20,4);
     for (nb=0; nb<8; nb++ ) // Create 8 custom characters
@@ -492,6 +543,8 @@ void bootscreen() {
     lcd.print(":.:.:_Bl4ckB0x_:.:.:");
     lcd.setCursor(0,3);
     lcd.print(version);
+    delay(1000);
+    lcd.print(WiFi.softAPIP());
     delay(3000);
 }
 

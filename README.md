@@ -1,6 +1,8 @@
 # NodeMCU-BlackBox
 ESP8266 based CAN-Bus Diagnostic Tool
 
+** ID-Config for SMART CDI 2003 **
+
 ## Introduction
 
 # I2C Pinout
@@ -32,3 +34,9 @@ ESP8266 based CAN-Bus Diagnostic Tool
 * Flash Size: 4M *3M SPIFFS*
 * CPU Freq.: 160 MHz
 * Upload Speed: 921600
+
+# Parts
+
+* MCP2515
+* NodeMCU
+* I2C Display 4x20

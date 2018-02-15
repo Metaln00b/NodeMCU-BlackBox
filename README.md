@@ -49,9 +49,11 @@ For more informations:
 
 ### Libraries
 
-* https://github.com/esp8266/Arduino
+* https://github.com/esp8266/Arduino *not included*
 
 * https://github.com/coryjfowler/MCP_CAN_lib
+
+* https://github.com/bblanchon/ArduinoJson
 
 * https://github.com/esp8266/Arduino/blob/master/doc/filesystem.rst
 

@@ -1,24 +1,53 @@
 # NodeMCU-BlackBox
 ESP8266 based CAN-Bus Diagnostic Tool
 
-** ID-Config for SMART CDI 2003 **
+**ID-Config for SMART CDI 2003**
 
 ## Introduction
 
-# I2C Pinout
+### I2C Display Connection *level shifter*
 
-* SDA -> D2
-* SCL -> D1
+| Display | ESP8266 |
+| ------- | ------- |
+| SDA     | D2      |
+| SCL     | D1      |
+| GND     | GND     |
+| VCC     | 5V *external* |
 
-# MCP2515 Pinout
+Please note: The NodeMCU is not official 5V tolerant.
+Please using a *level shifter* for the backpack.
+
+### MCP2515 Connection
 
 * INT: D4
 * SCK: CLK (SCLK) or D5 (HSCLK)
 * MOSI: SD1 (MOSI) or D7 (HMOSI)
 * MISO: SD0 (MISO) or D6 (HMISO)
 * CS: D3 or D8
+* GND: GND
+* VCC: 3V3 *NodeMCU*
+* VCC*TJA1050*: 5V *separately and external*
 
-# Libraries
+| MCP2515 | ESP8266 |
+| ------- | ------- |
+| INT     | D4      |
+| SCK     | D5      |
+| MOSI    | D7      |
+| MISO    | D6      |
+| CS      | D3      |
+| GND     | GND     |
+| VCC     | 3V3     |
+| VCC-*TJA5010* | 5V *separately/external* |
+
+Please note: The NodeMCU is not official 5V tolerant.
+You need to cut off the power supply of the *TJA1050-Chip* and
+connect it separately to the 5V of an external power supply,
+because the *TJA1050-Chip* can not run with 3V3.
+
+For more informations:
+* https://www.raspberrypi.org/forums/viewtopic.php?t=141052
+
+### Libraries
 
 * https://github.com/esp8266/Arduino
 
@@ -28,15 +57,20 @@ ESP8266 based CAN-Bus Diagnostic Tool
 
 * https://bitbucket.org/fmalpartida/new-liquidcrystal/wiki/Home *customized*
 
-# Configuration
+### Configuration
 
-* Board: WeMos D1 R2 & mini
+* Board: WeMos D1 R2 & mini or NodeMCU 0.9/1.0
 * Flash Size: 4M *3M SPIFFS*
 * CPU Freq.: 160 MHz
 * Upload Speed: 921600
 
-# Parts
+### Parts
 
 * MCP2515
 * NodeMCU
 * I2C Display 4x20
+* Level Shifter
+
+## License
+
+This project is licensed under the MIT License - see the [license file](LICENSE) for details.

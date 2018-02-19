@@ -1,0 +1,257 @@
+<div class="container animated" ng-class="{'fadeInLeft': loading_animation}">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>
+            Vehicle
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-success" ng-click="saveClicked()">
+                    Save
+                </button>
+                <button data-toggle="modal" type="button" class="btn btn-default" data-target="#myModal" ng-click="updateModal(d)">
+                    Info
+                </button>
+            </div>
+        </h1>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Information</h3>
+          </div>
+          <div class="modal-body">
+              <h4>General Information</h4>
+              <p><strong>Manufacturer:</strong> {{ardata.manufacturer}}</p>
+              <p><strong>Build Series:</strong> {{ardata.build_series}}</p>
+              <p><strong>Nameplate:</strong> {{ardata.nameplate}}</p>
+              <p><strong>Model:</strong> {{ardata.model}}</p>
+              <p><strong>Trim Level:</strong> {{ardata.trim_level}}</p>
+              <p><strong>Year Of Manufacture:</strong> {{ardata.year_of_manufacture}}</p>
+              <p><strong>Engine:</strong> {{ardata.engine}}</p>
+              <p><strong>Transmisson:</strong> {{ardata.transmission}}</p>
+              <p><strong>KBA Number:</strong> {{ardata.kba}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center-block" style="width: 60%">
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igmanufacturer" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Manufacturer</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="manufacturer"
+                            placeholder="Enter manufacturer"
+                            ng-model="ardata.manufacturer"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igbuild_series" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Build Series</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="build_series"
+                            placeholder="Enter build series"
+                            ng-model="ardata.build_series"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="ignameplate" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Nameplate</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="nameplate"
+                            placeholder="Enter nameplate"
+                            ng-model="ardata.nameplate"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igmodel" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Model</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="model"
+                            placeholder="Enter model"
+                            ng-model="ardata.model"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igtrim_level" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Trim Level</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="trim_level"
+                            placeholder="Enter trim level"
+                            ng-model="ardata.trim_level"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igyear_of_manufacture" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Year Of Manufacture</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="year_of_manufacture"
+                            placeholder="Enter year of manufacture"
+                            ng-model="ardata.year_of_manufacture"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igengine" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Engine</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="engine"
+                            placeholder="Enter engine"
+                            ng-model="ardata.engine"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igtransmission" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Transmission</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="transmission"
+                            placeholder="Enter transmission"
+                            ng-model="ardata.transmission"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igkba" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>KBA Number</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="kba"
+                            placeholder="Enter KBA number"
+                            ng-model="ardata.kba"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="text-muted text-justify" style="margin-top: 2em">
+            <em>Lorem ipsum</em> dolor sit amet, consetetur sadipscing elitr,
+            sed diam nonumy eirmod tempor invidunt ut labore et dolore
+            magna aliquyam erat, sed diam voluptua. At vero eos et
+            accusam et justo duo dolores et ea rebum. Stet clita
+            kasd gubergren, no sea takimata sanctus est Lorem ipsum
+            dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+            sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+            ut labore et dolore magna aliquyam erat, sed diam voluptua.
+            At vero eos et accusam et justo duo dolores et ea rebum.
+            Stet clita kasd gubergren, no sea takimata sanctus est
+            Lorem ipsum dolor sit amet.
+        </div>
+    </div>
+
+    <reload-info>
+        {{ardata.last_update}}
+    </reload-info>
+
+</div>

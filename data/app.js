@@ -44,10 +44,22 @@ app.config(function($routeProvider, $locationProvider) {
             activeTab   :   'home'
         })
 
-        .when('/diagnostic/info', {
-            templateUrl :   'views/diagnostic/info.html',
-            controller  :   'diagnosticInformationCtrl',
+        .when('/diagnostic/data', {
+            templateUrl :   'views/diagnostic/data.html',
+            controller  :   'diagnosticDataCtrl',
             activeTab   :   'diagnostic'
+        })
+
+        .when('/display/settings', {
+            templateUrl :   'views/display/settings.html',
+            controller  :   'displaySettingsCtrl',
+            activeTab   :   'display'
+        })
+
+        .when('/setup/vehicle', {
+            templateUrl :   'views/setup/vehicle.html',
+            controller  :   'setupVehicleCtrl',
+            activeTab   :   'setup'
         })
 
         .otherwise({ redirectTo: '/' });

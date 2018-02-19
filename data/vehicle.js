@@ -1,10 +1,12 @@
 var app = angular.module('app');
 
-app.controller('diagnosticInformationCtrl', function($scope, $timeout, $http, Page, DataAutoReload) {
-    Page.setSubTitle("Information");
+app.controller('setupVehicleCtrl', function($scope, $timeout, $http, Page, DataAutoReload) {
+    Page.setSubTitle("Setup Vehicle");
 
-    function getInfo() {
-        $http.get("info.json")
+    $scope.ardata = {};
+
+    function getVehicle() {
+        $http.get("vehicle.json")
             .success(function(response) {
                 $scope.ardata = response;
             })
@@ -12,14 +14,16 @@ app.controller('diagnosticInformationCtrl', function($scope, $timeout, $http, Pa
 
     $scope.saveClicked = function () {
 
-        $http.get("setinfo.json?" +
-            "id=" + $scope.ardata.id +
-            "&byte_n=" + $scope.ardata.byte_n +
-            "&inputmin=" + $scope.ardata.inputmin +
-            "&inputmax=" + $scope.ardata.inputmax +
-            "&outputmin=" + $scope.ardata.outputmin +
-            "&outputmax=" + $scope.ardata.outputmax +
-            "&unit=" + $scope.ardata.unit
+        $http.get("setVehicle.json?" +
+            "manufacturer=" + $scope.ardata.manufacturer +
+            "&build_series=" + $scope.ardata.build_series +
+            "&nameplate=" + $scope.ardata.nameplate +
+            "&model=" + $scope.ardata.model +
+            "&trim_level=" + $scope.ardata.trim_level +
+            "&year_of_manufacture=" + $scope.ardata.year_of_manufacture +
+            "&engine=" + $scope.ardata.engine +
+            "&transmission=" + $scope.ardata.transmission +
+            "&kba=" + $scope.ardata.kba
         );
 
     }
@@ -32,7 +36,7 @@ app.controller('diagnosticInformationCtrl', function($scope, $timeout, $http, Pa
     //    DataAutoReload.cancel(data_loop)
     //});
 
-    getInfo();
+    getVehicle();
 
     /* Informationen in Modal laden */
     $scope.modal_info;

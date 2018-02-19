@@ -22,7 +22,9 @@
     <script src="angular-sanitize.min.js"></script>
     <script src="angular-md5.js"></script>
     <script src="app.js"></script>
-    <script src="information.js"></script>
+    <script src="data.js"></script>
+    <script src="settings.js"></script>
+    <script src="vehicle.js"></script>
     <script src="controllers/home.js"></script>
     <script src="services/page.js"></script>
     <script src="services/data_auto_reload.js"></script>
@@ -43,16 +45,31 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#/"><img class="pull-left abstand-rechts" src="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAABwAAABAAAAAQAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAzGWaAVb/7YFZf/XBmf/1wZg/7YENZtoAAAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAACxAAAVzAUAFHtDAE3/0ABT//8AP///ADr//wA7//8AQv//AFn//wBT/80ADmY9AAmtAwAAAAAAAAAAAADMAAAe/wUAGaBDAFH/4QBd//8Aev//Bq///wvT//8L0P//BKj//wB0//8AX///AFX/3gARhzoAFP4DAAAAAAAH9QIAKegeAEP/sQB1//8Fof//D+D//xT///8Y////GP///xT///8O3P//BJv//wB1//8AQ/+rACDWFgAA7AEAG/8GABSQOAJm/+sHlf//C8T//xD0//8V////Gv///xr///8V////EPP//wvC//8Hk///Amf/6gANfDIAEv8DABD/BgIWZ0kRgv/+Cp///wvF//8P7///FP///xj///8Y////E////w/v//8Lxf//Cp7//xGC//4DFWFHAAb/AwAA6wE2RodMNJv//w+e//8Kuv//DNz//w/7//8S////Ev///w/7//8M3P//Cbn//w+e//80m///NkaITAAA4QEAAAAAYllHNWi7//soo///Caj//wvB//8U3P//F+v//xfr//8U3P//C8H//wmo//8oo///aLv/+2JZSTUAAAAAAAAAAHtsSRWOx//Vf9L//zSv//9L0P//TN3//0zk//9M5P//TN3//0vQ//80r///ftL//47H/9Z6bEoVAAAAAAAAAAComnkCiKP1csf///3k////sv///5b1//+P9P//j/T//5b1//+y////5P///8f///2Io/ZyqJp7AgAAAAAAAAAAAAAAAI2AYBCdw/+m/////v////////////////////////////////////6dw/+mjoFiEQAAAAAAAAAAAAAAAAAAAADz58kAkINlFZ68/4v////u/////////////////////////++fvP+LkINmFfTnywAAAAAAAAAAAAAAAAAAAAAAAAAAAOzgxACnmn4GjoVzLZOu/3Kszv+ZrM//mZOv/3KPhnQtp5uABvXpzgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//7QDo3MIBxLidA8S4nQPq3sMB///uAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAPgfAADgBwAAgAMAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAEAAIABAACAAQAAwAMAAMADAADgBwAA+B8AAA==" rel="icon" type="image/x-icon"" width="24em" height="24em"> Startseite</a>
+            <a class="navbar-brand" href="#/"><img class="pull-left abstand-rechts" src="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAABwAAABAAAAAQAAAABwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAzGWaAVb/7YFZf/XBmf/1wZg/7YENZtoAAAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAACxAAAVzAUAFHtDAE3/0ABT//8AP///ADr//wA7//8AQv//AFn//wBT/80ADmY9AAmtAwAAAAAAAAAAAADMAAAe/wUAGaBDAFH/4QBd//8Aev//Bq///wvT//8L0P//BKj//wB0//8AX///AFX/3gARhzoAFP4DAAAAAAAH9QIAKegeAEP/sQB1//8Fof//D+D//xT///8Y////GP///xT///8O3P//BJv//wB1//8AQ/+rACDWFgAA7AEAG/8GABSQOAJm/+sHlf//C8T//xD0//8V////Gv///xr///8V////EPP//wvC//8Hk///Amf/6gANfDIAEv8DABD/BgIWZ0kRgv/+Cp///wvF//8P7///FP///xj///8Y////E////w/v//8Lxf//Cp7//xGC//4DFWFHAAb/AwAA6wE2RodMNJv//w+e//8Kuv//DNz//w/7//8S////Ev///w/7//8M3P//Cbn//w+e//80m///NkaITAAA4QEAAAAAYllHNWi7//soo///Caj//wvB//8U3P//F+v//xfr//8U3P//C8H//wmo//8oo///aLv/+2JZSTUAAAAAAAAAAHtsSRWOx//Vf9L//zSv//9L0P//TN3//0zk//9M5P//TN3//0vQ//80r///ftL//47H/9Z6bEoVAAAAAAAAAAComnkCiKP1csf///3k////sv///5b1//+P9P//j/T//5b1//+y////5P///8f///2Io/ZyqJp7AgAAAAAAAAAAAAAAAI2AYBCdw/+m/////v////////////////////////////////////6dw/+mjoFiEQAAAAAAAAAAAAAAAAAAAADz58kAkINlFZ68/4v////u/////////////////////////++fvP+LkINmFfTnywAAAAAAAAAAAAAAAAAAAAAAAAAAAOzgxACnmn4GjoVzLZOu/3Kszv+ZrM//mZOv/3KPhnQtp5uABvXpzgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//7QDo3MIBxLidA8S4nQPq3sMB///uAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAPgfAADgBwAAgAMAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAEAAIABAACAAQAAwAMAAMADAADgBwAA+B8AAA==" rel="icon" type="image/x-icon"" width="24em" height="24em"> Home</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <li class="dropdown" data-ng-class="{active: route.current.activeTab === 'diagnostic'}">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><i class=""></i> Diagnose<span class="caret"></span></a>
+                <li data-ng-class="{active: route.current.activeTab === 'diagnostic'}"><a href="#/diagnostic/data"><i class=""></i> Live Data</a></li>
+                <li class="dropdown" data-ng-class="{active: route.current.activeTab === 'display'}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><i class=""></i> Display<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#/diagnostic/info"><i class=""></i> Information</a></li>
+                        <li><a href="#/display/settings"><i class=""></i> Settings</a></li>
                     </ul>
                 </li>
+                <li class="dropdown" data-ng-class="{active: route.current.activeTab === 'setup'}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><i class=""></i> Setup<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/setup/vehicle"><i class=""></i> Vehicle</a></li>
+                    </ul>
+                </li>
+                <!--
+                <li class="dropdown" data-ng-class="{active: route.current.activeTab === 'tools'}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><i class=""></i> Tools<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/tools/id_scan"><i class=""></i> ID Scanner</a></li>
+                        <li role="separator" class="divider"></li>
+                    </ul>
+                </li>-->
             </ul>
         </div>
     </div>

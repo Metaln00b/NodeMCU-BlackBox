@@ -18,17 +18,6 @@
 
 ESP8266WebServer server ( 80 );
 
-StaticJsonBuffer<2048> jsonBuffer;
-JsonObject& root = jsonBuffer.createObject();
-JsonArray& wi_id = root.createNestedArray("id");
-JsonArray& wi_byte_n = root.createNestedArray("byte_n");
-JsonArray& wi_inputmin = root.createNestedArray("inputmin");
-JsonArray& wi_inputmax = root.createNestedArray("inputmax");
-JsonArray& wi_outputmin = root.createNestedArray("outputmin");
-JsonArray& wi_outputmax = root.createNestedArray("outputmax");
-JsonArray& wi_unit = root.createNestedArray("unit");
-//char json[2048];
-
 #define version 4.0
 #define CAN0_INT 2 // Set INT to pin 2
 MCP_CAN CAN0(0); // Set CS to pin 10
@@ -48,40 +37,162 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); // Set the LCD I2
 long unsigned int rxId;
 uint8_t rxBuf[8];
 
-void saveSettings() {
+String wi_rpm = "";
+String wi_rpm_max = "5000";
+
+String wi_speed_kmh = "";
+
+String wi_engtemp_degC = "";
+String wi_engtemp_degC_min = "";
+String wi_engtemp_degC_max = "";
+
+String wi_volume_l = "";
+String wi_volume_l_max = "20";
+
+String wi_mileage_km = "";
+
+String wi_gear = "";
+
+String wi_accelerator_pedal_percent = "";
+
+String wi_custom_value = "1.5";
+
+void saveSettings()
+    {
+    StaticJsonBuffer<512> json_settingsBuffer;
+    JsonObject& settings = json_settingsBuffer.createObject();
+    JsonArray& json_onoff = settings.createNestedArray("onoff");
+    JsonArray& json_name = settings.createNestedArray("name");
+    JsonArray& json_id = settings.createNestedArray("id");
+    JsonArray& json_byte_n = settings.createNestedArray("byte_n");
+    JsonArray& json_inputmin = settings.createNestedArray("inputmin");
+    JsonArray& json_inputmax = settings.createNestedArray("inputmax");
+    JsonArray& json_outputmin = settings.createNestedArray("outputmin");
+    JsonArray& json_outputmax = settings.createNestedArray("outputmax");
+    JsonArray& json_unit = settings.createNestedArray("unit");
+    //char json[2048];
+
+    String wi_onoff = server.arg("onoff");
+    settings["onoff"] = wi_onoff;
+    
+    String wi_name = server.arg("name");
+    settings["name"] = wi_name;
+
     String wi_id = server.arg("id");
-    root["id"] = wi_id;
+    settings["id"] = wi_id;
 
     String wi_byte_n = server.arg("byte_n");
-    root["byte_n"] = wi_byte_n;
+    settings["byte_n"] = wi_byte_n;
 
     String wi_inputmin = server.arg("inputmin");
-    root["inputmin"] = wi_inputmin;
+    settings["inputmin"] = wi_inputmin;
 
     String wi_inputmax = server.arg("inputmax");
-    root["inputmax"] = wi_inputmax;
+    settings["inputmax"] = wi_inputmax;
 
     String wi_outputmin = server.arg("outputmin");
-    root["outputmin"] = wi_outputmin;
+    settings["outputmin"] = wi_outputmin;
 
     String wi_outputmax = server.arg("outputmax");
-    root["outputmax"] = wi_outputmax;
+    settings["outputmax"] = wi_outputmax;
 
     String wi_unit = server.arg("unit");
-    root["unit"] = wi_unit;
+    settings["unit"] = wi_unit;
 
-    File infoFile = SPIFFS.open("/info.json", "w");
-    root.printTo(infoFile);
-    infoFile.close();
+    File settingsFile = SPIFFS.open("/settings.json", "w+");
+    settings.printTo(settingsFile);
+    settingsFile.close();
 
-    Serial.print("ID: "+wi_id+"\n");
-    Serial.print("Byte: "+wi_byte_n+"\n");
-    Serial.print("Inputmin: "+wi_inputmin+"\n");
-    Serial.print("Inputmax: "+wi_inputmax+"\n");
-    Serial.print("Outputmin: "+wi_outputmin+"\n");
-    Serial.print("Outputmax: "+wi_outputmax+"\n");
-    Serial.print("Unit: "+wi_unit+"\n");
+    Serial.println("Settings saved!");
+
     server.send(200, "text/json", "true");
+}
+
+void saveVehicle()
+    {
+    StaticJsonBuffer<512> json_vehicleBuffer;
+    JsonObject& vehicle = json_vehicleBuffer.createObject();
+    JsonArray& json_manufacturer = vehicle.createNestedArray("manufacturer");
+    JsonArray& json_build_series = vehicle.createNestedArray("build_series");
+    JsonArray& json_nameplate = vehicle.createNestedArray("nameplate");
+    JsonArray& json_model = vehicle.createNestedArray("model");
+    JsonArray& json_trim_level = vehicle.createNestedArray("trim_level");
+    JsonArray& json_year_of_manufacture = vehicle.createNestedArray("year_of_manufacture");
+    JsonArray& json_engine = vehicle.createNestedArray("engine");
+    JsonArray& json_transmission = vehicle.createNestedArray("transmission");
+    JsonArray& json_kba = vehicle.createNestedArray("kba");
+    //char json[2048];
+
+    String wi_manufacturer = server.arg("manufacturer");
+    vehicle["manufacturer"] = wi_manufacturer;
+    
+    String wi_build_series = server.arg("build_series");
+    vehicle["build_series"] = wi_build_series;
+
+    String wi_nameplate = server.arg("nameplate");
+    vehicle["nameplate"] = wi_nameplate;
+
+    String wi_model = server.arg("model");
+    vehicle["model"] = wi_model;
+
+    String wi_trim_level = server.arg("trim_level");
+    vehicle["trim_level"] = wi_trim_level;
+
+    String wi_year_of_manufacture = server.arg("year_of_manufacture");
+    vehicle["year_of_manufacture"] = wi_year_of_manufacture;
+
+    String wi_engine = server.arg("engine");
+    vehicle["engine"] = wi_engine;
+
+    String wi_transmission = server.arg("transmission");
+    vehicle["transmission"] = wi_transmission;
+
+    String wi_kba = server.arg("kba");
+    vehicle["kba"] = wi_kba;
+
+    File vehicleFile = SPIFFS.open("/vehicle.json", "w+");
+    vehicle.printTo(vehicleFile);
+    vehicleFile.close();
+
+    Serial.println("Vehicle saved!");
+
+    server.send(200, "text/json", "true");
+}
+
+void sendDataToClient()
+{
+    StaticJsonBuffer<512> json_dataBuffer;
+    JsonObject& data = json_dataBuffer.createObject();
+    JsonArray& json_rpm = data.createNestedArray("rpm");
+    JsonArray& json_rpm_max = data.createNestedArray("rpm_max");
+    JsonArray& json_speed_kmh = data.createNestedArray("speed_kmh");
+    JsonArray& json_engtemp_degC = data.createNestedArray("engtemp_degC");
+    JsonArray& json_engtemp_degC_min = data.createNestedArray("engtemp_degC_min");
+    JsonArray& json_engtemp_degC_max = data.createNestedArray("engtemp_degC_max");
+    JsonArray& json_volume_l = data.createNestedArray("volume_l");
+    JsonArray& json_volume_l_max = data.createNestedArray("volume_l_max");
+    JsonArray& json_mileage_km = data.createNestedArray("mileage_km");
+    JsonArray& json_gear = data.createNestedArray("gear");
+    JsonArray& json_accelerator_pedal_percent = data.createNestedArray("accelerator_pedal_percent");
+    JsonArray& json_custom_value = data.createNestedArray("custom_value");
+    char data_array[512];
+
+    data["rpm"] = wi_rpm;    
+    data["rpm_max"] = wi_rpm_max;    
+    data["speed_kmh"] = wi_speed_kmh;    
+    data["engtemp_degC"] = wi_engtemp_degC;    
+    data["engtemp_degC_min"] = wi_engtemp_degC_min;    
+    data["engtemp_degC_max"] = wi_engtemp_degC_max;    
+    data["volume_l"] = wi_volume_l;    
+    data["volume_l_max"] = wi_volume_l_max;    
+    data["mileage_km"] = wi_mileage_km;    
+    data["gear"] = wi_gear;    
+    data["accelerator_pedal_percent"] = wi_accelerator_pedal_percent;    
+    data["custom_value"] = wi_custom_value;
+
+    data.printTo(data_array);
+
+    server.send(200, "text/json", data_array);
 }
 
 void web_interface_setup()
@@ -106,7 +217,16 @@ void web_interface_setup()
         Serial.println("SPIFFS Mount succesfull");
     }
 
-    server.on("/setinfo.json", saveSettings);
+    //server.on("/setinfo.json", saveSettings);
+    server.on("/setSettings.json",[]() {
+        saveSettings();
+    });
+    server.on("/setVehicle.json",[]() {
+        saveVehicle();
+    });
+    server.on("/data.json",[]() {
+        sendDataToClient();
+    });
 
     server.serveStatic("/", SPIFFS, "/index.html");
     server.serveStatic("/", SPIFFS, "/");
@@ -226,13 +346,15 @@ void accelerator_pedal_handler(uint8_t rxBuf[8]) {
     const uint8_t pedal_input_min = 0; // The lowest number of the range input.
     const uint8_t pedal_input_max = 250; // The lowest number of the range input.
     const uint8_t output_min = 0; // The lowest number of the range output.
-    const uint8_t output_max = 100; // The largest number of the range ouput.
+    const uint8_t output_max = 100; // The largest number of the range output.
 
     uint8_t accelerator_pedal_percent = FORMULA(accelerator_pedal_raw, pedal_input_min, pedal_input_max, pedal_input_min);
 
     char str_temp[4];
 
     dtostrf(accelerator_pedal_percent, 3, 0, str_temp);
+    
+    wi_accelerator_pedal_percent = str_temp;
 
     print_accelerator_pedal_percent(str_temp);
 }
@@ -243,13 +365,18 @@ void engine_temp_handler(uint8_t rxBuf[8]) {
     const uint8_t input_min = 0; // The lowest number of the range input.
     const uint8_t input_max = 255; // The lowest number of the range input.
     const int8_t output_min = -40; // The lowest number of the range output.
-    const uint8_t output_max = 215; // The largest number of the range ouput.
+    const uint8_t output_max = 215; // The largest number of the range output.
+    
+    wi_engtemp_degC_min = "-40";
+    wi_engtemp_degC_max = "215";
 
     int_fast16_t engtemp_degC = FORMULA(engtempraw, input_min, input_max, input_min);
 
     char str_temp[4];
 
     dtostrf(engtemp_degC, 3, 0, str_temp);
+    
+    wi_engtemp_degC = str_temp;
 
     print_engtemp_degC(str_temp);
 }
@@ -319,7 +446,9 @@ void mileage_handler(uint8_t rxBuf[8]) {
         char str_temp[8];
   
         dtostrf(km5, 7, 0, str_temp);
-  
+
+        wi_mileage_km = str_temp;
+
         print_km(str_temp);
     }
 }
@@ -336,6 +465,8 @@ void speed_handler(uint8_t rxBuf[8]) {
 
     dtostrf(speed_kmh, 3, 0, str_temp);
 
+    wi_speed_kmh = str_temp;
+
     print_kmh(str_temp);
 }
 
@@ -348,6 +479,8 @@ void rpm_handler(uint8_t rxBuf[8]) {
 
     dtostrf(rpm3, 4, 0, str_temp);
 
+    wi_rpm = str_temp;
+
     print_rpm(str_temp);
 }
 
@@ -357,41 +490,49 @@ void gear_handler(uint8_t rxBuf[8]) {
     if(gear == 0)
     {
         writeBigString("N", 0, 2);
+        wi_gear = "N";
     }
     if(gear == 17)
     {
         writeBigString("1", 0, 2);
         writeBigString(" ", 3, 2);
+        wi_gear = "1";
     }
     if(gear == 34)
     {
         writeBigString("2", 0, 2);
         writeBigString(" ", 3, 2);
+        wi_gear = "2";
     }
     if(gear == 51)
     {
         writeBigString("3", 0, 2);
         writeBigString(" ", 3, 2);
+        wi_gear = "3";
     }
     if(gear == 68)
     {
         writeBigString("4", 0, 2);
         writeBigString(" ", 3, 2);
+        wi_gear = "4";
     }
     if(gear == 85)
     {
         writeBigString("5", 0, 2);
         writeBigString(" ", 3, 2);
+        wi_gear = "5";
     }
     if(gear == 102)
     {
         writeBigString("6", 0, 2);
         writeBigString(" ", 3, 2);
+        wi_gear = "6";
     }
     if(gear == 119)
     {
         writeBigString("R", 0, 2);
         writeBigString(" ", 3, 2);
+        wi_gear = "R";
     }
 }
 
@@ -413,6 +554,8 @@ void fuel_tank_volume_handler(uint8_t rxBuf[8]) {
         char str_temp[6];
 
         dtostrf(volume_l, 5, 1, str_temp);
+
+        wi_volume_l = str_temp;
 
         print_volume_l(str_temp);
     }

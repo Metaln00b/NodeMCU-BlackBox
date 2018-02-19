@@ -1,0 +1,210 @@
+<div class="container animated fadeInLeft">
+
+<style>
+
+.progress {height: 1.250em;}
+
+</style>
+    <!-- Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-info-circle"></i> Diagnostic</h1>
+    </div>
+    <br>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b>Live Data</b>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td><h5>Speed:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata.response.speed_kmh}} km/h</font></h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Mileage:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata.response.mileage_km}} km</font></h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Gear:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata.response.gear}}</font></h5></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td>
+
+                            <div>
+                                <h5>RPM:&nbsp </h5>
+                                <small><i>{{ardata.response.rpm}} RPM of {{ardata.response.rpm_max}} RPM</i></small>
+                            </div>
+                                <div class="progress" style="width: 15em">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{width : ( getRPM_percentage() + '%' ) }">
+                                    </div>
+                                </div>
+                                <div>
+
+                                </div>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+
+                            <div>
+                                <h5>Engine Temperature:&nbsp </h5>
+                                <small><i>{{ardata.response.engtemp_degC}} &deg;C of {{ardata.response.engtemp_degC_max}} &deg;C</i></small>
+                            </div>
+                                <div class="progress" style="width: 15em">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{width : ( getEngTemp_percentage() + '%' ) }">
+                                    </div>
+                                </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td>
+
+                            <div>
+                                <h5>Volume:&nbsp </h5>
+                                <small><i>{{ardata.response.volume_l}} L remaining of {{ardata.response.volume_l_max}} L</i></small>
+                            </div>
+                                <div class="progress" style="width: 15em">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{width : ( getVolume_percentage() + '%' ) }">
+                                    </div>
+                                </div>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+
+                            <div>
+                                <h5>Pedal Acceleration:&nbsp </h5>
+                                <small><i>{{ardata.response.accelerator_pedal_percent}} &percnt;</i></small>
+                            </div>
+                                <div class="progress" style="width: 15em">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{width : ( ardata.response.accelerator_pedal_percent + '%' ) }">
+                                    </div>
+                                </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group" ng-show="onoff">
+                <table>
+                    <tr>
+                        <td>
+
+                            <div>
+                                <h5>{{ardata_settings.name}}:&nbsp </h5>
+                                <small><i>{{ardata.response.custom_value}} {{ardata_settings.unit}} of {{ardata_settings.outputmax}} {{ardata_settings.unit}}</i></small>
+                            </div>
+                                <div class="progress" style="width: 15em">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" ng-style="{width : ( getCustomValue_percentage() + '%' ) }">
+                                    </div>
+                                </div>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b>Vehicle Information</b>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td><h5>Manufacturer:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.manufacturer}}</font></h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Build Series:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.build_series}}</font></h5></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td><h5>Nameplate:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.nameplate}}</font></h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Model:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.model}}</font></h5></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td><h5>Trim Level:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.trim_level}}</font></h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Year Of Manufacture:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.year_of_manufacture}}</font></h5></td>
+                      </tr>
+                </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td><h5>Engine:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.engine}}</font></h5></td>
+                    </tr>
+                    <tr>
+                        <td><h5>Transmission:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.transmission}}</font></h5></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <table>
+                    <tr>
+                        <td><h5>KBA Number:&nbsp </h5></td>
+                        <td><h5><font color="#0a5095">{{ardata_vehicle.kba}}</font></h5></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <reload-info>
+        {{ardata.last_update}}
+    </reload-info>
+
+</div>

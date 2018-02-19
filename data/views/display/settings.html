@@ -1,14 +1,29 @@
 <div class="container animated" ng-class="{'fadeInLeft': loading_animation}">
 
+<style>
+
+#content input[disabled] {
+    color: #DCDAD1;
+    padding: 2px;
+    margin: 0 0 0 0;
+    background-image: none;
+}
+
+.has-error .form-control {
+    color: #a94442;
+}
+
+</style>
+
     <!-- Header -->
     <div class="page-header">
         <h1>
-            Information
+            Settings
             <div class="btn-group pull-right">
-                <button data-placement="bottom" title="Save" tooltip type="button" class="btn btn-success" ng-click="saveClicked()">
+                <button type="button" class="btn btn-success" ng-click="saveClicked()">
                     Save
                 </button>
-                <button data-toggle="modal" data-placement="bottom" title="Show info" tooltip type="button" class="btn btn-default" data-target="#myModal" ng-click="updateModal(d)">
+                <button data-toggle="modal" type="button" class="btn btn-default" data-target="#myModal" ng-click="updateModal(d)">
                     Info
                 </button>
             </div>
@@ -27,6 +42,8 @@
           </div>
           <div class="modal-body">
               <h4>General Information</h4>
+              <p><strong>ONOFF:</strong> {{ardata.onoff}}</p>
+              <p><strong>NAME:</strong> {{ardata.name}}</p>
               <p><strong>ID:</strong> {{ardata.id}}</p>
               <p><strong>BYTE:</strong> {{ardata.byte_n}}</p>
               <p><strong>INPUTMIN:</strong> {{ardata.inputmin}}</p>
@@ -43,6 +60,59 @@
     </div>
 
     <div class="center-block" style="width: 60%">
+
+        <div class="row" style="">
+
+            <form class="form-horizontal ng-pristine ng-valid hidden-xs">
+                <div class="form-group form-group-lg mb-2" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>View</strong></label>
+                    <div class="col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <div class="btn-group btn-group-lg pull-right" style="margin: 0 auto;" id="igonoff" data-toggle="buttons">
+                              <label class="btn btn-success btn-on-1 btnON" id="btnON" ng-click="activate()">
+                              <input type="radio">ON</label>
+                              <label class="btn btn-danger btn-off-1 btnOFF" id="btnOFF" ng-click="deactivate()">
+                              <input type="radio">OFF</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form class="form-horizontal ng-pristine ng-valid visible-xs">
+                <div class="form-group form-group-lg mb-2" style="margin: 0 auto;">
+                    <label class="control-label col-xs-12" style="text-align: left;"><strong>View</strong></label>
+                    <div class="col-xs-12" style="float: left;">
+                        <div class="btn-group btn-group-lg pull-left" style="margin: 0 auto;" id="igonoffxs" data-toggle="buttons">
+                              <label class="btn btn-success btn-on-1 btnON" id="btnONxs" ng-click="activate()">
+                              <input type="radio">ON</label>
+                              <label class="btn btn-danger btn-off-1 btnOFF" id="btnOFFxs" ng-click="deactivate()">
+                              <input type="radio">OFF</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="row" style="margin-top: 2em">
+
+            <form class="form-horizontal">
+                <div class="form-group form-group-lg mb-2" id="igname" style="margin: 0 auto;">
+                    <label class="control-label col-xs-4 col-md-6 col-lg-6" style="text-align: left;"><strong>Name</strong></label>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" style="float: right;">
+                        <input
+                            maxlength="20"
+                            type="text"
+                            class="form-control input-lg"
+                            id="name"
+                            placeholder="Enter name"
+                            ng-model="ardata.name"
+                            style="text-align: right; font-weight: bold;"
+                        />
+                    </div>
+                </div>
+            </form>
+
+        </div>
 
         <div class="row" style="margin-top: 2em">
 

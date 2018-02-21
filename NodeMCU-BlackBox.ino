@@ -13,7 +13,7 @@
 #include <FS.h>
 #include <ArduinoJson.h>
 
-#define ssid      "BlackBox"      // WiFi SSID
+#define ssid      "BlackBox"  // WiFi SSID
 #define password  "12345678"  // WiFi password
 
 ESP8266WebServer server ( 80 );
@@ -56,6 +56,7 @@ String wi_gear = "";
 String wi_accelerator_pedal_percent = "";
 
 String wi_custom_value = "1.5";
+//long unsigned int custom_id = 0;
 
 void saveSettings()
     {
@@ -177,17 +178,17 @@ void sendDataToClient()
     JsonArray& json_custom_value = data.createNestedArray("custom_value");
     char data_array[512];
 
-    data["rpm"] = wi_rpm;    
-    data["rpm_max"] = wi_rpm_max;    
-    data["speed_kmh"] = wi_speed_kmh;    
-    data["engtemp_degC"] = wi_engtemp_degC;    
-    data["engtemp_degC_min"] = wi_engtemp_degC_min;    
-    data["engtemp_degC_max"] = wi_engtemp_degC_max;    
-    data["volume_l"] = wi_volume_l;    
-    data["volume_l_max"] = wi_volume_l_max;    
-    data["mileage_km"] = wi_mileage_km;    
-    data["gear"] = wi_gear;    
-    data["accelerator_pedal_percent"] = wi_accelerator_pedal_percent;    
+    data["rpm"] = wi_rpm;
+    data["rpm_max"] = wi_rpm_max;
+    data["speed_kmh"] = wi_speed_kmh;
+    data["engtemp_degC"] = wi_engtemp_degC;
+    data["engtemp_degC_min"] = wi_engtemp_degC_min;
+    data["engtemp_degC_max"] = wi_engtemp_degC_max;
+    data["volume_l"] = wi_volume_l;
+    data["volume_l_max"] = wi_volume_l_max;
+    data["mileage_km"] = wi_mileage_km;
+    data["gear"] = wi_gear;
+    data["accelerator_pedal_percent"] = wi_accelerator_pedal_percent;
     data["custom_value"] = wi_custom_value;
 
     data.printTo(data_array);
@@ -560,6 +561,34 @@ void fuel_tank_volume_handler(uint8_t rxBuf[8]) {
         print_volume_l(str_temp);
     }
 }
+/*
+void custom_value_handler(uint8_t rxBuf[8]) {
+    File settingsFile = SPIFFS.open("/settings.json", "r");
+
+    Serial.println("Settings loaded!");
+
+    uint8_t custom_value_raw = rxBuf[5];
+
+    const uint8_t input_min = 0; // The lowest number of the range input.
+    const uint8_t input_max = 255; // The lowest number of the range input.
+    const int8_t output_min = -40; // The lowest number of the range output.
+    const uint8_t output_max = 215; // The largest number of the range output.
+
+    wi_engtemp_degC_min = "-40";
+    wi_engtemp_degC_max = "215";
+
+    int_fast16_t engtemp_degC = FORMULA(engtempraw, input_min, input_max, input_min);
+
+    char str_temp[4];
+
+    dtostrf(engtemp_degC, 3, 0, str_temp);
+    
+    wi_engtemp_degC = str_temp;
+
+    print_engtemp_degC(str_temp);
+
+    settingsFile.close();
+}*/
 
 pkg_routine_t pkg_routines[] = {
     {
@@ -585,7 +614,8 @@ pkg_routine_t pkg_routines[] = {
     {
         .id = 0x515,
         .handler = fuel_tank_volume_handler,
-    },{.id = 0, .handler = NULL}
+    },
+    {.id = 0, .handler = NULL}
 };
 
 /*******************************************************************************
@@ -631,6 +661,7 @@ void loop() {
             }
         }
     }
+    ESP.wdtFeed();
 }
 
 /*******************************************************************************

@@ -60,48 +60,47 @@ String wi_custom_value = "1.5";
 
 void saveSettings()
     {
-    StaticJsonBuffer<512> json_settingsBuffer;
-    JsonObject& settings = json_settingsBuffer.createObject();
-    JsonArray& json_onoff = settings.createNestedArray("onoff");
-    JsonArray& json_name = settings.createNestedArray("name");
-    JsonArray& json_id = settings.createNestedArray("id");
-    JsonArray& json_byte_n = settings.createNestedArray("byte_n");
-    JsonArray& json_inputmin = settings.createNestedArray("inputmin");
-    JsonArray& json_inputmax = settings.createNestedArray("inputmax");
-    JsonArray& json_outputmin = settings.createNestedArray("outputmin");
-    JsonArray& json_outputmax = settings.createNestedArray("outputmax");
-    JsonArray& json_unit = settings.createNestedArray("unit");
+    StaticJsonDocument<512> json_settings;
+    JsonArray json_onoff = json_settings.createNestedArray("onoff");
+    JsonArray json_name = json_settings.createNestedArray("name");
+    JsonArray json_id = json_settings.createNestedArray("id");
+    JsonArray json_byte_n = json_settings.createNestedArray("byte_n");
+    JsonArray json_inputmin = json_settings.createNestedArray("inputmin");
+    JsonArray json_inputmax = json_settings.createNestedArray("inputmax");
+    JsonArray json_outputmin = json_settings.createNestedArray("outputmin");
+    JsonArray json_outputmax = json_settings.createNestedArray("outputmax");
+    JsonArray json_unit = json_settings.createNestedArray("unit");
     //char json[2048];
 
     String wi_onoff = server.arg("onoff");
-    settings["onoff"] = wi_onoff;
+    json_settings["onoff"] = wi_onoff;
     
     String wi_name = server.arg("name");
-    settings["name"] = wi_name;
+    json_settings["name"] = wi_name;
 
     String wi_id = server.arg("id");
-    settings["id"] = wi_id;
+    json_settings["id"] = wi_id;
 
     String wi_byte_n = server.arg("byte_n");
-    settings["byte_n"] = wi_byte_n;
+    json_settings["byte_n"] = wi_byte_n;
 
     String wi_inputmin = server.arg("inputmin");
-    settings["inputmin"] = wi_inputmin;
+    json_settings["inputmin"] = wi_inputmin;
 
     String wi_inputmax = server.arg("inputmax");
-    settings["inputmax"] = wi_inputmax;
+    json_settings["inputmax"] = wi_inputmax;
 
     String wi_outputmin = server.arg("outputmin");
-    settings["outputmin"] = wi_outputmin;
+    json_settings["outputmin"] = wi_outputmin;
 
     String wi_outputmax = server.arg("outputmax");
-    settings["outputmax"] = wi_outputmax;
+    json_settings["outputmax"] = wi_outputmax;
 
     String wi_unit = server.arg("unit");
-    settings["unit"] = wi_unit;
+    json_settings["unit"] = wi_unit;
 
     File settingsFile = SPIFFS.open("/settings.json", "w+");
-    settings.printTo(settingsFile);
+    serializeJson(json_settings, settingsFile);
     settingsFile.close();
 
     Serial.println("Settings saved!");
@@ -111,48 +110,47 @@ void saveSettings()
 
 void saveVehicle()
     {
-    StaticJsonBuffer<512> json_vehicleBuffer;
-    JsonObject& vehicle = json_vehicleBuffer.createObject();
-    JsonArray& json_manufacturer = vehicle.createNestedArray("manufacturer");
-    JsonArray& json_build_series = vehicle.createNestedArray("build_series");
-    JsonArray& json_nameplate = vehicle.createNestedArray("nameplate");
-    JsonArray& json_model = vehicle.createNestedArray("model");
-    JsonArray& json_trim_level = vehicle.createNestedArray("trim_level");
-    JsonArray& json_year_of_manufacture = vehicle.createNestedArray("year_of_manufacture");
-    JsonArray& json_engine = vehicle.createNestedArray("engine");
-    JsonArray& json_transmission = vehicle.createNestedArray("transmission");
-    JsonArray& json_kba = vehicle.createNestedArray("kba");
+    StaticJsonDocument<512> json_vehicle;
+    JsonArray json_manufacturer = json_vehicle.createNestedArray("manufacturer");
+    JsonArray json_build_series = json_vehicle.createNestedArray("build_series");
+    JsonArray json_nameplate = json_vehicle.createNestedArray("nameplate");
+    JsonArray json_model = json_vehicle.createNestedArray("model");
+    JsonArray json_trim_level = json_vehicle.createNestedArray("trim_level");
+    JsonArray json_year_of_manufacture = json_vehicle.createNestedArray("year_of_manufacture");
+    JsonArray json_engine = json_vehicle.createNestedArray("engine");
+    JsonArray json_transmission = json_vehicle.createNestedArray("transmission");
+    JsonArray json_kba = json_vehicle.createNestedArray("kba");
     //char json[2048];
 
     String wi_manufacturer = server.arg("manufacturer");
-    vehicle["manufacturer"] = wi_manufacturer;
+    json_vehicle["manufacturer"] = wi_manufacturer;
     
     String wi_build_series = server.arg("build_series");
-    vehicle["build_series"] = wi_build_series;
+    json_vehicle["build_series"] = wi_build_series;
 
     String wi_nameplate = server.arg("nameplate");
-    vehicle["nameplate"] = wi_nameplate;
+    json_vehicle["nameplate"] = wi_nameplate;
 
     String wi_model = server.arg("model");
-    vehicle["model"] = wi_model;
+    json_vehicle["model"] = wi_model;
 
     String wi_trim_level = server.arg("trim_level");
-    vehicle["trim_level"] = wi_trim_level;
+    json_vehicle["trim_level"] = wi_trim_level;
 
     String wi_year_of_manufacture = server.arg("year_of_manufacture");
-    vehicle["year_of_manufacture"] = wi_year_of_manufacture;
+    json_vehicle["year_of_manufacture"] = wi_year_of_manufacture;
 
     String wi_engine = server.arg("engine");
-    vehicle["engine"] = wi_engine;
+    json_vehicle["engine"] = wi_engine;
 
     String wi_transmission = server.arg("transmission");
-    vehicle["transmission"] = wi_transmission;
+    json_vehicle["transmission"] = wi_transmission;
 
     String wi_kba = server.arg("kba");
-    vehicle["kba"] = wi_kba;
+    json_vehicle["kba"] = wi_kba;
 
     File vehicleFile = SPIFFS.open("/vehicle.json", "w+");
-    vehicle.printTo(vehicleFile);
+    serializeJson(json_vehicle, vehicleFile);
     vehicleFile.close();
 
     Serial.println("Vehicle saved!");
@@ -162,36 +160,35 @@ void saveVehicle()
 
 void sendDataToClient()
 {
-    StaticJsonBuffer<512> json_dataBuffer;
-    JsonObject& data = json_dataBuffer.createObject();
-    JsonArray& json_rpm = data.createNestedArray("rpm");
-    JsonArray& json_rpm_max = data.createNestedArray("rpm_max");
-    JsonArray& json_speed_kmh = data.createNestedArray("speed_kmh");
-    JsonArray& json_engtemp_degC = data.createNestedArray("engtemp_degC");
-    JsonArray& json_engtemp_degC_min = data.createNestedArray("engtemp_degC_min");
-    JsonArray& json_engtemp_degC_max = data.createNestedArray("engtemp_degC_max");
-    JsonArray& json_volume_l = data.createNestedArray("volume_l");
-    JsonArray& json_volume_l_max = data.createNestedArray("volume_l_max");
-    JsonArray& json_mileage_km = data.createNestedArray("mileage_km");
-    JsonArray& json_gear = data.createNestedArray("gear");
-    JsonArray& json_accelerator_pedal_percent = data.createNestedArray("accelerator_pedal_percent");
-    JsonArray& json_custom_value = data.createNestedArray("custom_value");
+    StaticJsonDocument<512> json_data;
+    JsonArray json_rpm = json_data.createNestedArray("rpm");
+    JsonArray json_rpm_max = json_data.createNestedArray("rpm_max");
+    JsonArray json_speed_kmh = json_data.createNestedArray("speed_kmh");
+    JsonArray json_engtemp_degC = json_data.createNestedArray("engtemp_degC");
+    JsonArray json_engtemp_degC_min = json_data.createNestedArray("engtemp_degC_min");
+    JsonArray json_engtemp_degC_max = json_data.createNestedArray("engtemp_degC_max");
+    JsonArray json_volume_l = json_data.createNestedArray("volume_l");
+    JsonArray json_volume_l_max = json_data.createNestedArray("volume_l_max");
+    JsonArray json_mileage_km = json_data.createNestedArray("mileage_km");
+    JsonArray json_gear = json_data.createNestedArray("gear");
+    JsonArray json_accelerator_pedal_percent = json_data.createNestedArray("accelerator_pedal_percent");
+    JsonArray json_custom_value = json_data.createNestedArray("custom_value");
     char data_array[512];
 
-    data["rpm"] = wi_rpm;
-    data["rpm_max"] = wi_rpm_max;
-    data["speed_kmh"] = wi_speed_kmh;
-    data["engtemp_degC"] = wi_engtemp_degC;
-    data["engtemp_degC_min"] = wi_engtemp_degC_min;
-    data["engtemp_degC_max"] = wi_engtemp_degC_max;
-    data["volume_l"] = wi_volume_l;
-    data["volume_l_max"] = wi_volume_l_max;
-    data["mileage_km"] = wi_mileage_km;
-    data["gear"] = wi_gear;
-    data["accelerator_pedal_percent"] = wi_accelerator_pedal_percent;
-    data["custom_value"] = wi_custom_value;
+    json_data["rpm"] = wi_rpm;
+    json_data["rpm_max"] = wi_rpm_max;
+    json_data["speed_kmh"] = wi_speed_kmh;
+    json_data["engtemp_degC"] = wi_engtemp_degC;
+    json_data["engtemp_degC_min"] = wi_engtemp_degC_min;
+    json_data["engtemp_degC_max"] = wi_engtemp_degC_max;
+    json_data["volume_l"] = wi_volume_l;
+    json_data["volume_l_max"] = wi_volume_l_max;
+    json_data["mileage_km"] = wi_mileage_km;
+    json_data["gear"] = wi_gear;
+    json_data["accelerator_pedal_percent"] = wi_accelerator_pedal_percent;
+    json_data["custom_value"] = wi_custom_value;
 
-    data.printTo(data_array);
+    serializeJson(json_data, data_array);
 
     server.send(200, "text/json", data_array);
 }

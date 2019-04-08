@@ -51,13 +51,13 @@ For more informations:
 
 * https://github.com/esp8266/Arduino *not included*
 
-* https://github.com/coryjfowler/MCP_CAN_lib
+* https://github.com/coryjfowler/MCP_CAN_lib *v1.5*
 
-* https://github.com/bblanchon/ArduinoJson
+* https://github.com/bblanchon/ArduinoJson *v6.x*
 
-* https://github.com/esp8266/Arduino/blob/master/doc/filesystem.rst
+* https://github.com/esp8266/Arduino/blob/master/doc/filesystem.rst *v0.3.0*
 
-* https://bitbucket.org/fmalpartida/new-liquidcrystal/wiki/Home *customized*
+* https://bitbucket.org/fmalpartida/new-liquidcrystal/wiki/Home *v1.5.0*
 
 ### Configuration
 

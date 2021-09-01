@@ -8,10 +8,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
-
-#define version 3.4
+#define version 3.5
 #define CAN0_INT 2 // Set INT to pin 2
 MCP_CAN CAN0(0); // Set CS to pin 10
 
@@ -29,45 +26,6 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); // Set the LCD I2
 
 long unsigned int rxId;
 uint8_t rxBuf[8];
-
-String html1 = "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n<meta content=\"text/html; charset=ISO-8859-1\" http-equiv=\"content-type\">\r\n<title>WebSchalter</title>\r\n";
-
-String html2 = "</head>\r\n<body>\r\n</body>\r\n</html>";
- 
-ESP8266WebServer server(80);    // Server Port  hier einstellen
-String Temp = "";
- 
-void Ereignis_Index()           // Wird ausgeuehrt wenn "http://<ip address>/" aufgerufen wurde
-{
-  Temp = html1 + String((rxId)) + String((rxBuf[0])) + String((rxBuf[1])) + String((rxBuf[2])) + String((rxBuf[3])) + String((rxBuf[4])) + String((rxBuf[5])) + String((rxBuf[6])) + String((rxBuf[7])) + html2;
-  server.send(200, "text/html", Temp);
-}
-
-void web_interface_setup()
-{
- 
-  Serial.begin(115200);         // Serielle schnittstelle initialisieren
-  Serial.println("");           // Lehere Zeile ausgeben
-  Serial.println("Starte WLAN-Hotspot \"BlackBox\"");
-  WiFi.mode(WIFI_AP);           // access point modus
-  WiFi.softAP("BlackBox", "12345678");    // Name des Wi-Fi netzes
-  delay(500);                   //Abwarten 0,5s
-  Serial.print("IP Adresse ");  //Ausgabe aktueller IP des Servers
-  Serial.println(WiFi.softAPIP());
- 
-  //  Behandlung der Ereignissen anschliessen
-  server.on("/", Ereignis_Index);
- 
-  server.begin();               // Starte den Server
-  Serial.println("HTTP Server gestartet");
-}
- 
-void web_interface_loop()
-{
-  server.handleClient();
-}
-
-
 
 const char custom[][8] PROGMEM = {                      // Custom character definitions
     { 0x1F, 0x1F, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00 }, // char 1 
@@ -154,11 +112,24 @@ const char bigChars[][8] PROGMEM = {
 byte col,row,nb=0,bc=0; // General
 byte bb[8]; // Byte buffer for reading from PROGMEM
 
+typedef struct {
+    int rpm;
+    int speed_kmh;
+    int fuel_percent;
+    int water_temperature_degC;
+    int turn_indicator_left;
+    int turn_indicator_right;
+    int handbrake;
+    int oil_temperature_degC;
+} serial_data_t;
+
+serial_data_t serial_data;
+
 //long unsigned int rxId;
 unsigned char len = 0;
 //uint8_t rxBuf[8];
 
-typedef void (*pkg_handler_t) (uint8_t rxBuf[8]);
+typedef void (*pkg_handler_t) (serial_data_t *obj, uint8_t rxBuf[8]);
 
 typedef struct {
     long unsigned int id;
@@ -169,7 +140,7 @@ typedef struct {
  * Handler routines                                                            *
  ******************************************************************************/
 
-void accelerator_pedal_handler(uint8_t rxBuf[8]) {
+void accelerator_pedal_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     uint8_t accelerator_pedal_raw = rxBuf[5];
 
     const uint8_t pedal_input_min = 0; // The lowest number of the range input.
@@ -186,7 +157,7 @@ void accelerator_pedal_handler(uint8_t rxBuf[8]) {
     print_accelerator_pedal_percent(str_temp);
 }
 
-void engine_temp_handler(uint8_t rxBuf[8]) {
+void engine_temp_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     uint8_t engtempraw = rxBuf[5];  
 
     const uint8_t input_min = 0; // The lowest number of the range input.
@@ -196,6 +167,8 @@ void engine_temp_handler(uint8_t rxBuf[8]) {
 
     int_fast16_t engtemp_degC = FORMULA(engtempraw, input_min, input_max, input_min);
 
+    obj->water_temperature_degC = engtemp_degC;
+
     char str_temp[4];
 
     dtostrf(engtemp_degC, 3, 0, str_temp);
@@ -203,7 +176,7 @@ void engine_temp_handler(uint8_t rxBuf[8]) {
     print_engtemp_degC(str_temp);
 }
 
-void signal_handler(uint8_t rxBuf[8]) {
+void signal_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     static uint8_t oldbits = 0;
     const uint8_t newbits = rxBuf[0];
 
@@ -217,19 +190,23 @@ void signal_handler(uint8_t rxBuf[8]) {
 
         if(rxBuf[0] & 0b00100000) // Turn signal left
         {
+            obj->turn_indicator_left = 1;
             print_turn_signal_left("<=");
         }
         else
         {
+            obj->turn_indicator_left = 0;
             print_turn_signal_left("  ");
         }
   
         if(rxBuf[0] & 0b00010000) // Turn signal right
         {
+            obj->turn_indicator_right = 1;
             print_turn_signal_right("=>");
         }
         else
         {
+            obj->turn_indicator_right = 0;
             print_turn_signal_right("  ");
         }
 
@@ -244,7 +221,7 @@ void signal_handler(uint8_t rxBuf[8]) {
     }
 }
 
-void mileage_handler(uint8_t rxBuf[8]) {
+void mileage_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     static uint32_t oldkm1 = 0;
     static uint32_t oldkm2 = 0;
     static uint32_t oldkm3 = 0;
@@ -273,13 +250,15 @@ void mileage_handler(uint8_t rxBuf[8]) {
     }
 }
 
-void signal_and_mileage_handler(uint8_t rxBuf[8]) {
-    signal_handler(rxBuf);
-    mileage_handler(rxBuf);
+void signal_and_mileage_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
+    signal_handler(obj, rxBuf);
+    mileage_handler(obj, rxBuf);
 }
 
-void speed_handler(uint8_t rxBuf[8]) {
+void speed_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     uint8_t speed_kmh = rxBuf[1];
+
+    obj->speed_kmh = speed_kmh;
 
     char str_temp[4];
 
@@ -288,10 +267,12 @@ void speed_handler(uint8_t rxBuf[8]) {
     print_kmh(str_temp);
 }
 
-void rpm_handler(uint8_t rxBuf[8]) {
+void rpm_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     uint8_t rpm1 = rxBuf[1];
     uint8_t rpm2 = rxBuf[2];
     uint16_t rpm3=(rpm1<<8)|(rpm2);
+
+    obj->rpm = rpm3;
 
     char str_temp[5];
 
@@ -300,7 +281,7 @@ void rpm_handler(uint8_t rxBuf[8]) {
     print_rpm(str_temp);
 }
 
-void gear_handler(uint8_t rxBuf[8]) {
+void gear_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     int gear = rxBuf[3];
 
     if(gear == 0)
@@ -344,12 +325,12 @@ void gear_handler(uint8_t rxBuf[8]) {
     }
 }
 
-void rpm_and_gear_handler(uint8_t rxBuf[8]) {
-    rpm_handler(rxBuf);
-    gear_handler(rxBuf);
+void rpm_and_gear_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
+    rpm_handler(obj, rxBuf);
+    gear_handler(obj, rxBuf);
 }
 
-void fuel_tank_volume_handler(uint8_t rxBuf[8]) {
+void fuel_tank_volume_handler(serial_data_t *obj, uint8_t rxBuf[8]) {
     uint8_t volumeraw = rxBuf[6];
 
     if(volumeraw == 255)
@@ -359,6 +340,10 @@ void fuel_tank_volume_handler(uint8_t rxBuf[8]) {
     else
     {
         float volume_l = volumeraw*0.5;
+        
+        float volume_percent = ((100 / 22) * volume_l);
+        obj->fuel_percent = volume_percent;
+        
         char str_temp[6];
 
         dtostrf(volume_l, 5, 1, str_temp);
@@ -399,7 +384,7 @@ pkg_routine_t pkg_routines[] = {
  ******************************************************************************/
 
 void setup() {
-    Serial.begin(9600); // Used to type in characters
+    Serial.begin(115200); // Used to type in characters
 
     lcd.begin(20,4);
     for (nb=0; nb<8; nb++ ) // Create 8 custom characters
@@ -413,13 +398,12 @@ void setup() {
 
     lcd.clear();
     print_emptyValues();
-    web_interface_setup();
+
+    serial_data_init(&serial_data);
 }
 
 void loop() {
 
-    web_interface_loop();
-    
     if(!digitalRead(CAN0_INT)) // If CAN0_INT pin is low, read receive buffer
     {
         CAN0.readMsgBuf(&rxId, &len, rxBuf); // Read data: len = data length, buf = data byte(s)
@@ -432,11 +416,55 @@ void loop() {
             {
                 if(pkg_routines[i].handler)
                 {
-                    pkg_routines[i].handler(rxBuf);
+                    pkg_routines[i].handler(&serial_data, rxBuf);
                 }
             }
         }
+        
     }
+    serial_data_send(&serial_data);
+}
+
+/*******************************************************************************
+ * BT Data routines                                                            *
+ ******************************************************************************/
+
+serial_data_t *
+serial_data_init(serial_data_t *obj)
+{
+    obj->rpm = 0;
+    obj->speed_kmh = 100;
+    obj->fuel_percent = 0;
+    obj->water_temperature_degC = 0;
+    obj->turn_indicator_left = 0;
+    obj->turn_indicator_right = 0;
+    obj->handbrake = 0;
+    obj->oil_temperature_degC = 0;
+    
+    return obj;
+}
+
+void
+serial_data_send(serial_data_t *obj)
+{
+    Serial.print("{");
+    Serial.print(obj->rpm);
+    Serial.print("&");
+    Serial.print(obj->speed_kmh);
+    Serial.print("&");
+    Serial.print(obj->fuel_percent);
+    Serial.print("&");
+    Serial.print(obj->water_temperature_degC);
+    Serial.print("&");
+    Serial.print(obj->turn_indicator_left);
+    Serial.print("&");
+    Serial.print(obj->turn_indicator_right);
+    Serial.print("&");
+    Serial.print(obj->handbrake);
+    Serial.print("&");
+    Serial.print(obj->oil_temperature_degC);
+    Serial.print("}");
+    //Serial.print("{" + obj->rpm + "&" + obj->speed_kmh + "&" + obj->fuel_percent + "&" + obj->water_temperature_degC + "&" + obj->turn_indicator_left + "&" + obj->turn_indicator_right + "&" + obj->handbrake + "&" + obj->oil_temperature_degC + "}");
 }
 
 /*******************************************************************************
@@ -499,7 +527,6 @@ void init_mcp() {
     // Initialize MCP2515 running at 16MHz with a baudrate of 500kb/s and the masks and filters disabled.
     if(CAN0.begin(MCP_ANY, CAN_500KBPS, MCP_16MHZ) == CAN_OK)
     {
-        Serial.println("MCP2515 Initialized Successfully!");
         lcd.setCursor(0,3);
         lcd.print("MCP2515 O.K.");
         delay(1000);
@@ -507,7 +534,6 @@ void init_mcp() {
     else
     {
         lcd.clear();
-        Serial.println("Error Initializing MCP2515...");
         lcd.print("Error MCP2515...");
         delay(2000);
         lcd.setCursor(0,2);
@@ -520,8 +546,6 @@ void init_mcp() {
     CAN0.setMode(MCP_LISTENONLY); // Set operation mode to MCP_NORMAL so the MCP2515 sends acks to received data.
 
     pinMode(CAN0_INT, INPUT); // Configuring pin for /INT input
-
-    Serial.println("MCP2515 Listen-Only...");
 }
 
 /*******************************************************************************

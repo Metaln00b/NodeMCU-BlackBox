@@ -46,7 +46,7 @@ For more informations:
 
 * https://github.com/esp8266/Arduino/blob/master/doc/filesystem.rst
 
-* https://bitbucket.org/fmalpartida/new-liquidcrystal/wiki/Home *customized*
+* https://github.com/fmalpartida/New-LiquidCrystal *customized*
 
 ### Configuration
 
